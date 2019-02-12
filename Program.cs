@@ -25,7 +25,7 @@ class Program
                 }
 
                 Console.WriteLine("{0}, size: 0x{1:x}, number of files: {2}\n",
-                    header.magic, header.totalSize, Utils.Flip(header.numFiles));
+                    header.magic, header.totalSize, header.numFiles.Flip());
 
                 foreach (var descriptor in
                     reader.ReadStructs<Descriptor>((int)header.numFiles.Flip()))
@@ -85,10 +85,7 @@ class Program
                 var accumulatedLength = (uint)(lastStringSize + stringTableBase + 0xC);
 
                 for (int i = 0; i < len; i++)
-                {
-                    accumulatedLength += i == 0 ? 0 : lengths[i - 1];
-                    offsets[i] = accumulatedLength;
-                }
+                    offsets[i] = accumulatedLength += i == 0 ? 0 : lengths[i - 1];
 
                 writer.Write("XPR2".ToCharArray());
                 writer.Write(0);
